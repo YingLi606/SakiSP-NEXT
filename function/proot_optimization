@@ -94,8 +94,8 @@ nameserver 1.2.4.8
 nameserver 240c::6666
 nameserver 240c::6644" >/etc/resolv.conf
 echo -e "${GREEN}尝试禁用无用检测${RES}"
-ln -s ~/SakiSP-NEXT/mikunext.sh /usr/bin/mikunext
-chmod 777 /usr/bin/mikunext
+ln -s ~/SakiSP-NEXT/sakispnext.sh /usr/bin/sakispnext
+chmod 777 /usr/bin/sakispnext
 touch ~/.hushlogin
 $package_manager update -y &
 $package_manager upgrade -y
@@ -143,12 +143,12 @@ clear
 if [ $whiptail_available -eq 1 ]; then
     whiptail --title "是否安装MikuOne？" --yesno "是否需要安装MikuOne？该工具可用于很大用途" 10 60
     if [ $? -eq 0 ]; then
-        echo -e "${SUSSEC} 用户选择安装MikuOne，正在克隆仓库...${RES}"
-        git clone https://dl.gancmcs.top/https://github.com/YingLi606/MikuOne.git
+        echo -e "${SUSSEC} 用户选择安装SakiSP，正在克隆仓库...${RES}"
+        git clone https://gh.xmly.dev/https://github.com/YingLi606/SakiSP.git
         
         sleep 2
         clear
-        echo -e "${SUSSEC} MikuOne已完成安装步骤，请重新启动脚本即可（如果失败，请手动从Github仓库克隆）${RES}"
+        echo -e "${SUSSEC} SakiSP已完成安装步骤（如果失败，请手动从Github仓库克隆）${RES}"
     else
         clear
         echo -e "${INFO} 用户选择无需安装MikuOne，该步骤跳过，请重新启动脚本即可${RES}"
@@ -156,7 +156,6 @@ if [ $whiptail_available -eq 1 ]; then
     sleep 3
     echo -e "${INFO}现在，请选择你需要更换的国内软件源${RES}"
     sleep 3
-    clear
     sudo bash -c "bash <(curl -sSL https://linuxmirrors.cn/main.sh)" && echo -e "${GREEN}✅ 执行完成，请重新启动脚本，再从管理proot容器里启动即可${RES}"
 fi
 

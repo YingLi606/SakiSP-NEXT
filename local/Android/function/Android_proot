@@ -122,7 +122,7 @@ install_proot() {
 	mkdir -p "${HOME}/.termux/SakiSP-NEXT/proot"
 	Proot_os_download_source="https://sgp1lxdmirror01.do.letsbuildthe.cloud/images"
 	open_proot_os_list=$(
-		whiptail --title "选择功能" --menu "请选择你需要安装的Proot容器系统" 15 60 7 \
+		whiptail --title "选择功能" --menu "请选择你需要安装的容器系统" 15 60 7 \
 			"1" "🍎 Ubuntu" \
 			"2" "🍥 Debian" \
 			"3" "🍐 Rockylinux" \

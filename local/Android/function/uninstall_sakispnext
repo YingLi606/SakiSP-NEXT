@@ -11,7 +11,7 @@ if ! command -v whiptail &> /dev/null; then
     pkg install whiptail -y &> /dev/null
 fi
 
-if whiptail --title "SakiSP-NEXT 卸载工具" --yesno "是否确认卸载 SakiSP-NEXT 及相关文件？" 8 50; then
+if whiptail --title "SakiSP-NEXT 卸载工具" --yesno "是否确认卸载 SakiSP-NEXT 及相关文件及容器？" 8 50; then
     echo -e "\n${GREEN}[+] 开始执行卸载操作...${RESET}"
 
     PATH1="${HOME}/.termux/共享文件夹"
@@ -42,9 +42,11 @@ if whiptail --title "SakiSP-NEXT 卸载工具" --yesno "是否确认卸载 SakiS
         echo -e "${YELLOW}[*] 未检测到 $PATH3，跳过删除${RESET}"
     fi
 
-    echo -e "\n${GREEN}[√] 卸载操作全部完成！${RESET}"
+    echo -e "\n${GREEN}[√] 卸载操作全部完成！感谢你使用SakiSP-NEXT！${RESET}"
 else
     echo -e "\n${RED}[-] 用户取消卸载操作，程序即将退出...${RESET}"
+    sleep 3
+    clear
     exit 0
 fi
 }
