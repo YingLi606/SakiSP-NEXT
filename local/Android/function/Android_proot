@@ -57,7 +57,7 @@ open_ubuntu_os_list() {
 		Download_proot_url=${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		;;
 	4)
-		os_name=Plucky_Ubuntu_25.10
+		os_name=Questing_Ubuntu_25.10
 		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/questing/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
 		Download_proot_url=${Proot_os_download_source}/ubuntu/questing/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		;;		
