@@ -35,8 +35,7 @@ open_ubuntu_os_list() {
 		whiptail --title "选择功能" --menu "请选择你要安装的Ubuntu版本系统" 15 60 6 \
 			"1" "Jammy（22.04 LTS）" \
 			"2" "Noble（24.04 LTS）" \
-			"3" "Plucky（25.04 LTS）" \
-			"4" "Questing（25.10 OTS）" \			
+			"3" "Plucky（25.04 LTS）" \			
 			"0" "退出" 3>&1 1>&2 2>&3
 	)
 	case ${ubuntu_os_list} in
@@ -56,7 +55,21 @@ open_ubuntu_os_list() {
 		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
 		Download_proot_url=${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		;;
-	4)
+	*)
+		exit 1
+		;;
+	esac
+}
+
+open_ubuntu_osone_list() {
+	ubuntu_os_list=$(
+		whiptail --title "选择功能" --menu "请选择你要安装的Ubuntu版本系统" 15 60 6 \
+			"1" "Questing（25.10）" \
+			"0" "退出" 3>&1 1>&2 2>&3
+	)
+	case ${ubuntu_os_list} in
+
+	1)
 		os_name=Questing_Ubuntu_25.10
 		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/questing/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
 		Download_proot_url=${Proot_os_download_source}/ubuntu/questing/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
@@ -130,9 +143,10 @@ install_proot() {
 	open_proot_os_list=$(
 		whiptail --title "选择功能" --menu "请选择你需要安装的Proot容器系统" 15 60 7 \
 			"1" "🍎 Ubuntu" \
-			"2" "🍥 Debian" \
-			"3" "🍐 Rockylinux" \
-			"4" "🥝 CentOS" \
+			"2" "💡 Ubuntu（短期支持版）" \			
+			"3" "🍥 Debian" \
+			"4" "🍐 Rockylinux" \
+			"5" "🥝 CentOS" \
 			"0" "🌚 退出" 3>&1 1>&2 2>&3
 	)
 	case ${open_proot_os_list} in
@@ -141,14 +155,18 @@ install_proot() {
 		log "安装ubuntu系列"
 		;;
 	2)
+		open_ubuntu_osone_list
+		log "安装ubuntu（短期支持版）系列"
+		;;		
+	3)
 		open_debian_os_list
 		log "debian系列"
 		;;
-	3)
+	4)
 		open_rockylinux_os_list
 		log "安装rockylinux系列"
 		;;
-	4)
+	5)
 		open_centos_os_list
 		log "安装centos系列"
 		;;
