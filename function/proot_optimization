@@ -118,7 +118,7 @@ if [[ " ${supported_distros[@]} " =~ " ${current_distro} " ]]; then
         fi
     fi
 else
-    echo -e "${INFO}当前系统${current_distro}不支持MikuOne安装，跳过whiptail检测与相关流程${RES}"
+    echo -e "${INFO}你的系统 ${current_distro} 暂不支持SakiSP安装，跳过whiptail检测与相关流程${RES}"
     whiptail_available=0
 fi
 
@@ -151,12 +151,29 @@ if [ $whiptail_available -eq 1 ]; then
         echo -e "${SUSSEC} SakiSP已完成安装步骤（如果失败，请手动从Github仓库克隆）${RES}"
     else
         clear
-        echo -e "${INFO} 用户选择无需安装MikuOne，该步骤跳过，请重新启动脚本即可${RES}"
+        echo -e "${INFO} 用户选择无需安装SakiSP，该步骤跳过${RES}"
     fi
     sleep 3
-    echo -e "${INFO}现在，请选择你需要更换的国内软件源${RES}"
+    echo -e "${INFO}现在，请选择你需要更换的国内软件源（进入过程可能需要一段时间，请耐心等待）${RES}"
     sleep 3
-    sudo bash -c "bash <(curl -sSL https://linuxmirrors.cn/main.sh)" && echo -e "${GREEN}✅ 执行完成，请重新启动脚本，再从管理proot容器里启动即可${RES}"
+    sudo bash -c "bash <(curl -sSL https://linuxmirrors.cn/main.sh)" && echo -e "${GREEN}✅ 执行完成${RES}"
+
+if [ $whiptail_available -eq 1 ]; then
+    whiptail --title "是否安装TMOE TOOL？" --yesno "是否需要安装TMOE TOOL？该工具可用于很大用途" 10 60
+    if [ $? -eq 0 ]; then
+        echo -e "${SUSSEC} 用户选择安装TMOE TOOL，正在准备开始...（可以选择第一个即可）${RES}"
+        sleep 2
+        bash -c "$(curl -L gitee.com/mo2/linux/raw/2/2)"
+        
+        sleep 2
+        clear
+        echo -e "${SUSSEC} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RES}"
+        sleep 3
+    else
+        clear
+        echo -e "${INFO} 用户选择无需安装TMOE TOOL，该步骤跳过，请重新启动脚本且启动容器${RES}"
+        sleep 3
+    fi    
 fi
 
 exit
