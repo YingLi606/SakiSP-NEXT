@@ -36,7 +36,7 @@ open_ubuntu_os_list() {
 			"1" "Jammy（22.04 LTS）" \
 			"2" "Noble（24.04 LTS）" \
 			"3" "Plucky（25.04 LTS）" \
-			"4" "Questing（25.10）" \			
+			"4" "Questing（25.10 OTS）" \			
 			"0" "退出" 3>&1 1>&2 2>&3
 	)
 	case ${ubuntu_os_list} in
