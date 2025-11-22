@@ -135,6 +135,7 @@ self_install curl
 self_install bc
 
 echo -e "${GREEN}请自行手动配置语言${RESET}"
+hcjx
 dpkg-reconfigure locales
 echo -e "${INFO} 手动语言配置完成，2秒后继续...${RESET}"
 sleep 2
