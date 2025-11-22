@@ -36,6 +36,7 @@ open_ubuntu_os_list() {
 			"1" "Jammy（22.04 LTS）" \
 			"2" "Noble（24.04 LTS）" \
 			"3" "Plucky（25.04 LTS）" \
+			"4" "Questing（25.10）" \			
 			"0" "退出" 3>&1 1>&2 2>&3
 	)
 	case ${ubuntu_os_list} in
@@ -55,6 +56,11 @@ open_ubuntu_os_list() {
 		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
 		Download_proot_url=${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		;;
+	4)
+		os_name=Plucky_Ubuntu_25.10
+		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/questing/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
+		Download_proot_url=${Proot_os_download_source}/ubuntu/questing/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
+		;;		
 	*)
 		exit 1
 		;;
@@ -119,7 +125,7 @@ install_proot() {
 		exit
 		;;
 	esac
-	mkdir -p "${HOME}/.termux/MikuOne-NEXT/proot"
+	mkdir -p "${HOME}/.termux/SakiSP-NEXT/proot"
 	Proot_os_download_source="https://sgp1lxdmirror01.do.letsbuildthe.cloud/images"
 	open_proot_os_list=$(
 		whiptail --title "选择功能" --menu "请选择你需要安装的Proot容器系统" 15 60 7 \
@@ -180,19 +186,19 @@ install_proot() {
 		done
 	}
 
-	download_file="${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz"
+	download_file="${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz"
 	# 检查文件是否存在并且文件大小是否小于40MB
 	if [ -f "$download_file" ] && [ $(du -b "$download_file" | cut -f1) -lt 41943040 ]; then
 		echo -e "${WORRY}${RED}${download_file}${RES}可能已经损坏"
-		log "\"${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz\"文件损坏，重新下载"
+		log "\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\"文件损坏，重新下载"
 		log "下载url:\"${Download_proot_url}\" 保存到 \"$download_file\""
 		counter=0
 		Maximum_number_of_attempts=2  # 定义最大重试次数
 		wget_proot_url
 	elif [ -f "$download_file" ]; then
-		log "\"${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz\"存在且大于40MBB"
+		log "\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\"存在且大于40MBB"
 	else
-		log "\"${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz\"不存在"
+		log "\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\"不存在"
 		log "下载url:\"${Download_proot_url}\" 保存到 \"$download_file\""
 		counter=0
 		Maximum_number_of_attempts=2  # 
@@ -203,36 +209,36 @@ install_proot() {
 	echo -e "${INFO}您可以使用${RED}rm -rfv $download_file${RES}来节省存储空间"
 
 	unset LD_PRELOAD
-	mkdir -p ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}
-	log "解压\"${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz\""
-	proot --link2symlink tar --overwrite -xJf ${HOME}/MikuOne-NEXT/download/${os_name}.tar.xz -C ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/ --exclude='dev' || :
-	chmod 777 "${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/"
-	chmod 777 "${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/"
+	mkdir -p ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}
+	log "解压\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\""
+	proot --link2symlink tar --overwrite -xJf ${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz -C ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/ --exclude='dev' || :
+	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/"
+	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/"
 	echo -e "${GREEN}复制脚本到容器${RES}"
 	log "复制脚本到容器"
-	mkdir -p ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
-	mkdir -p ${HOME}/.termux/MikuOne-NEXT/.重要文件夹/sys/.empty
-	mkdir -p ${HOME}/.termux/MikuOne-NEXT/.重要文件夹/dev/shm
-	cp -r ${HOME}/MikuOne-NEXT/config ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
-	cp -r ${HOME}/MikuOne-NEXT/function ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
-	cp -r ${HOME}/MikuOne-NEXT/local ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
-	cp ${HOME}/MikuOne-NEXT/mikunext.sh ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
-	cp ${HOME}/MikuOne-NEXT/git_push.sh ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/MikuOne-NEXT
+	mkdir -p ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
+	mkdir -p ${HOME}/.termux/SakiSP-NEXT/.重要文件夹/sys/.empty
+	mkdir -p ${HOME}/.termux/SakiSP-NEXT/.重要文件夹/dev/shm
+	cp -r ${HOME}/SakiSP-NEXT/config ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
+	cp -r ${HOME}/SakiSP-NEXT/function ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
+	cp -r ${HOME}/SakiSP-NEXT/local ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
+	cp ${HOME}/SakiSP-NEXT/mikunext.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
+	cp ${HOME}/SakiSP-NEXT/git_push.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	echo -e "${GREEN}复制优化脚本到容器${RES}"
-	cp ${HOME}/MikuOne-NEXT/function/proot_proc/.* ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/
-	cp ${HOME}/MikuOne-NEXT/function/proot_optimization ${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/root/优化.sh
+	cp ${HOME}/SakiSP-NEXT/function/proot_proc/.* ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/
+	cp ${HOME}/SakiSP-NEXT/function/proot_optimization ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/优化.sh
 	proot \
 		--link2symlink -0 \
-		--rootfs=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/ \
+		--rootfs=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/ \
 		--bind=/dev \
 		--bind=/sys \
 		--bind=/proc \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.loadavg:/proc/loadavg" \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.version:/proc/version" \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.uptime:/proc/uptime" \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.stat:/proc/stat" \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.vmstat:/proc/vmstat" \
-		--bind="${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.sysctl_entry_cap_last_cap:/proc/sysctl_entry_cap_last_cap" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.loadavg:/proc/loadavg" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.version:/proc/version" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.uptime:/proc/uptime" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.stat:/proc/stat" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.vmstat:/proc/vmstat" \
+		--bind="${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.sysctl_entry_cap_last_cap:/proc/sysctl_entry_cap_last_cap" \
 		--kernel-release="5.15.0" \
 		-w /root /usr/bin/env \
 		-i HOME=/root \
@@ -257,7 +263,7 @@ install_proot() {
 
 }
 start_proot() {
-	list_dir ${HOME}/.termux/MikuOne-NEXT/proot
+	list_dir ${HOME}/.termux/SakiSP-NEXT/proot
 	case $user_choice in
 	0)
 		echo -e "${RED}QUIT${RES}"
@@ -282,15 +288,15 @@ start_proot() {
 			--bind=/data/app \
 			--bind=/proc:/proc \
 			--bind=/data/data/com.termux/files/home/.termux/共享文件夹:/termux共享文件夹 \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.vmstat:/proc/vmstat \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.version:/proc/version \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.uptime:/proc/uptime \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.stat:/proc/stat \
-			--bind=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/proc/.loadavg:/proc/loadavg \
-			--bind=${HOME}/.termux/MikuOne-NEXT/.重要文件夹/sys/.empty:/sys/fs/selinux \
-			--bind=${HOME}/.termux/MikuOne-NEXT/.重要文件夹/dev/shm:/dev/shm \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.sysctl_inotify_max_user_watches:/proc/sys/fs/inotify/max_user_watches \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.sysctl_entry_cap_last_cap:/proc/sys/kernel/cap_last_cap \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.vmstat:/proc/vmstat \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.version:/proc/version \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.uptime:/proc/uptime \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.stat:/proc/stat \
+			--bind=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/.loadavg:/proc/loadavg \
+			--bind=${HOME}/.termux/SakiSP-NEXT/.重要文件夹/sys/.empty:/sys/fs/selinux \
+			--bind=${HOME}/.termux/SakiSP-NEXT/.重要文件夹/dev/shm:/dev/shm \
 			--bind=/sys \
 			--bind=/proc/self/fd/2:/dev/stderr \
 			--bind=/proc/self/fd/1:/dev/stdout \
@@ -306,7 +312,7 @@ start_proot() {
 			--kill-on-exit \
 			--cwd=/root \
 			--change-id=0:0 \
-			--rootfs=${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/ \
+			--rootfs=${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/ \
 			/usr/bin/env -i \
 			PATH=/usr/local/sbin:/usr/local/bin:/bin:/usr/bin:/sbin:/usr/sbin:/usr/games:/usr/local/games \
 			TERM=xterm-256color \
@@ -354,7 +360,7 @@ start_proot() {
 	esac
 }
 rm_proot() {
-	list_dir ${HOME}/.termux/MikuOne-NEXT/proot
+	list_dir ${HOME}/.termux/SakiSP-NEXT/proot
 	case $user_choice in
 	0)
 		echo -e "${RED}QUIT${RES}"
@@ -377,8 +383,8 @@ rm_proot() {
 		if [ $user_sum -eq $correct_sum ]; then
 			echo -e "✅ 验证完成！您已证明你是人类，继续操作"
 			sleep 2
-			chmod 777 -R "${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/"
-			rm -rfv "${HOME}/.termux/MikuOne-NEXT/proot/${os_name}/"
+			chmod 777 -R "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/"
+			rm -rfv "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/"
 			echo -e "删除完成,正在退出"
 			sleep 2
 			clear

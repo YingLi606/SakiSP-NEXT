@@ -94,12 +94,12 @@ nameserver 1.2.4.8
 nameserver 240c::6666
 nameserver 240c::6644" >/etc/resolv.conf
 echo -e "${GREEN}尝试禁用无用检测${RES}"
-ln -s ~/MikuOne-NEXT/mikunext.sh /usr/bin/mikunext
+ln -s ~/SakiSP-NEXT/mikunext.sh /usr/bin/mikunext
 chmod 777 /usr/bin/mikunext
 touch ~/.hushlogin
 $package_manager update -y &
 $package_manager upgrade -y
-Modify_the_variable last_time_aptup $(date +%s) ${HOME}/MikuOne-NEXT/config/config.sh
+Modify_the_variable last_time_aptup $(date +%s) ${HOME}/SakiSP-NEXT/config/config.sh
 current_distro=$(get_linux_distro)
 supported_distros=("ubuntu" "debian" "kali" "gxde")
 whiptail_available=0

@@ -1,4 +1,4 @@
-source ${HOME}/MikuOne-NEXT/config/config.sh
+source ${HOME}/SakiSP-NEXT/config/config.sh
 RED='\e[1;31m'
 GREEN='\e[1;32m'
 YELLOW='\e[1;33m'
@@ -15,7 +15,7 @@ declare -A arch_map=(["aarch64"]="arm64" ["armv7l"]="armhf" ["x86_64"]="amd64")
 archurl="${arch_map[$(uname -m)]}"
 
 log() {
-	local fileName="${HOME}/MikuOne-NEXT/log.log"
+	local fileName="${HOME}/SakiSP-NEXT/log.log"
 	local fileMaxLen=100
 	local fileDeleteLen=10
 	if test $fileName; then
@@ -30,11 +30,11 @@ log() {
 	fi
 }
 
-A_DIR="${HOME}/MikuOne-NEXT"
+A_DIR="${HOME}/SakiSP-NEXT"
 B_DIR="${HOME}/.back"
 TEMP_DIR="${HOME}/.TEMP"
 REMOTE_URL="${rawgit}config/version"
-LOCAL_VERSION_FILE="${HOME}/MikuOne-NEXT/config/version"
+LOCAL_VERSION_FILE="${HOME}/SakiSP-NEXT/config/version"
 log 清理临时目录
 rm -rf $TEMP_DIR
 
@@ -92,7 +92,7 @@ if [ "$(printf '%s\n' "$REMOTE_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" 
 	log "BACKUP_FILE=".back/backup_$(date +%Y%m%d_%H%M%S)_${LOCAL_VERSION}_to_${REMOTE_VERSION}.tar.gz""
 	BACKUP_FILE=".back/backup_$(date +%Y%m%d_%H%M%S)_${LOCAL_VERSION}_to_${REMOTE_VERSION}.tar.gz"
 	log "正在创建备份的压缩文件: $BACKUP_FILE"
-	if ! tar -czf "$BACKUP_FILE" -C "$HOME" MikuOne-NEXT; then
+	if ! tar -czf "$BACKUP_FILE" -C "$HOME" SakiSP-NEXT; then
 		echo -e "${ERROR}备份失败！"
 	fi
 
@@ -104,9 +104,9 @@ if [ "$(printf '%s\n' "$REMOTE_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" 
 	log 清理临时目录
 	rm -rf $TEMP_DIR
 	if [ "${qqBot}" != "" ]; then
-		Modify_the_variable qqBot ${qqBot} ${HOME}/MikuOne-NEXT/config/config.sh
+		Modify_the_variable qqBot ${qqBot} ${HOME}/SakiSP-NEXT/config/config.sh
 	fi
-	chmod 777 ${HOME}/MikuOne-NEXT/mikunext.sh
+	chmod 777 ${HOME}/SakiSP-NEXT/mikunext.sh
 	echo "更新完成！重启脚本后，请在主菜单里退出脚本且重新启动并选择默认更新源！将在3秒后重启脚本... （当前版本: $REMOTE_VERSION）"
 	sleep 3
 	log 更新成功
@@ -118,7 +118,7 @@ if [ "$(printf '%s\n' "$REMOTE_VERSION" "$LOCAL_VERSION" | sort -V | tail -n1)" 
 	sleep 1
 	clear
 	exit 1
-	${HOME}/MikuOne-NEXT/mikunext.sh
+	${HOME}/SakiSP-NEXT/sakispnext.sh
 else
 	echo "✅ 当前是最新版本，无需更新！"
 	log 已是最新版本

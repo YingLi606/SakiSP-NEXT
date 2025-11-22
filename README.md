@@ -1,4 +1,4 @@
-# MikuOne-NEXT
+# SakiSP-NEXT
 
 一个用于管理软件安装、配置和系统优化的脚本工具，旨在简化Proot容器的日常操作。
 
@@ -23,14 +23,14 @@ MikuOne-NEXT 是一个基于 Shell 的系统管理工具，提供多种常用软
 1. 确保系统已安装 `git` 和 `whiptail`(请确保在termux里)。
 2. 下载脚本：
    ```bash
-   git clone https://github.com/YingLi606/MikuOne-NEXT.git
+   git clone https://github.com/YingLi606/SakiSP-NEXT.git
    ```
 
 ## 使用说明
 
 运行脚本：
 ```bash
-bash ~/MikuOne-NEXT/mikunext.sh
+bash ~/MikuOne-NEXT/sakispnext.sh
 ```
 
 根据菜单选择所需功能（如安装软件）
