@@ -64,7 +64,7 @@ open_ubuntu_os_list() {
 open_ubuntu_osone_list() {
 	ubuntu_os_list=$(
 		whiptail --title "选择功能" --menu "请选择你要安装的Ubuntu版本系统" 15 60 6 \
-			"1" "Questing（25.10）" \
+			"1" "25.10" \
 			"0" "退出" 3>&1 1>&2 2>&3
 	)
 	case ${ubuntu_os_list} in
