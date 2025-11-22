@@ -143,12 +143,12 @@ clear
 if [ $whiptail_available -eq 1 ]; then
     whiptail --title "安装SakiSP" --yesno "是否需要安装SakiSP？该工具可用于很大用途" 10 60
     if [ $? -eq 0 ]; then
-        echo -e "${SUCCESS} 用户选择安装SakiSP，正在克隆仓库...${RESET}"
+        echo -e "${INFO} 用户选择安装SakiSP，正在克隆仓库...${RESET}"
         git clone https://gh.xmly.dev/https://github.com/YingLi606/SakiSP.git
         
         sleep 2
         clear
-        echo -e "${SUCCESS} SakiSP已完成安装步骤，即将进入下一步...${RESET}"
+        echo -e "${SUSSEC} SakiSP已完成安装步骤，即将进入下一步...${RESET}"
         sleep 2
     else
         clear
@@ -163,13 +163,13 @@ if [ $whiptail_available -eq 1 ]; then
     
     whiptail --title "安装TMOE TOOL" --yesno "是否需要安装TMOE TOOL？该工具可用于很大用途" 10 60
     if [ $? -eq 0 ]; then
-        echo -e "${SUCCESS} 用户选择安装TMOE TOOL，正在准备开始...（可以选择第一个即可）${RESET}"
+        echo -e "${INFO} 用户选择安装TMOE TOOL，正在准备开始...（可以选择第一个即可）${RESET}"
         sleep 2
         sudo bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
         
         sleep 2
         clear
-        echo -e "${SUCCESS} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RESET}"
+        echo -e "${SUSSEC} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RESET}"
         sleep 3
     else
         clear
