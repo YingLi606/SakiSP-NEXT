@@ -6,11 +6,11 @@ open_debian_os_list() {
 	sleep 0.1
 	echo -e "\e[92m1. 🟢 Trixie（Debian 13 稳定版）\e[0m"
 	sleep 0.1
-	echo -e "\e[92m1. ⚪️ Forky（Debian 13 滚动更新版）\e[0m"	
+	echo -e "\e[92m2. ⚪️ Forky（Debian 13 滚动更新版）\e[0m"	
 	sleep 0.1
-	echo -e "\e[93m2. 🟡 Bookworm（Debian 12）\e[0m"
+	echo -e "\e[93m3. 🟡 Bookworm（Debian 12）\e[0m"
 	sleep 0.1
-	echo -e "\e[94m3. 🔵 Bullseye（Debian 11）\e[0m"
+	echo -e "\e[94m4. 🔵 Bullseye（Debian 11）\e[0m"
 	sleep 0.1
 	echo -e "\e[91m0. 🔴 退出\e[0m"
 	sleep 0.1
@@ -73,7 +73,7 @@ open_ubuntu_os_list() {
 	sleep 0.1
 	echo -e "\e[94m3. 🔵 Plucky（25.04 LTS）\e[0m"
 	sleep 0.1
-	echo -e "\e[94m3. ⚪️ Questing（25.10）\e[0m"
+	echo -e "\e[94m4. ⚪️ Questing（25.10）\e[0m"
 	sleep 0.1
 	echo -e "\e[91m0. 🔴 退出\e[0m"
 	sleep 0.1
@@ -264,14 +264,14 @@ install_proot() {
 		Maximum_number_of_attempts=2
 		wget_proot_url
 	fi
-	echo -e "\e[94m ℹ️  提示：您可以使用 rm -rfv $download_file 来节省存储空间 \e[0m"
+	echo -e "\e[94m提示：您可以使用 rm -rfv $download_file 来节省存储空间 \e[0m"
 	unset LD_PRELOAD
 	mkdir -p ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}
 	log "解压\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\""
 	proot --link2symlink tar --overwrite -xJf ${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz -C ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/ --exclude='dev' || :
 	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/"
 	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/"
-	echo -e "\e[92m ✅ 进度：复制脚本到容器 \e[0m"
+	echo -e "\e[92m进度：复制脚本到容器 \e[0m"
 	log "复制脚本到容器"
 	mkdir -p ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	mkdir -p ${HOME}/.termux/SakiSP-NEXT/.重要文件夹/sys/.empty
@@ -281,7 +281,7 @@ install_proot() {
 	cp -r ${HOME}/SakiSP-NEXT/local ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	cp ${HOME}/SakiSP-NEXT/sakispnext.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	cp ${HOME}/SakiSP-NEXT/git_push.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
-	echo -e "\e[92m ✅ 进度：复制优化脚本到容器 \e[0m"
+	echo -e "\e[92m进度：复制优化脚本到容器 \e[0m"
 	cp ${HOME}/SakiSP-NEXT/function/proot_proc/.* ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/
 	cp ${HOME}/SakiSP-NEXT/function/proot_optimization ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/优化.sh
 	proot \
@@ -320,15 +320,9 @@ install_proot() {
 }
 start_proot() {
 	list_dir ${HOME}/.termux/SakiSP-NEXT/proot
-	echo -e "\n\e[90m📌 \e[1m【已安装容器列表】\e[0m"
-	for ((i=0; i<${#list_items[@]}; i++)); do
-		echo -e "\e[92m$((i+1)). 🟢 ${list_items[$i]}\e[0m"
-	done
-	echo -e "\e[91m0. 🔴 退出\e[0m"
-	read -p "请输入对应数字选择：" user_choice
 	case $user_choice in
 	0)
-		echo -e "\e[91m ❌ 退出程序 \e[0m"
+		echo -e "${RED}QUIT${RES}"
 		log "退出"
 		;;
 	*)
