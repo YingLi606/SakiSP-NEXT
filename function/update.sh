@@ -44,6 +44,7 @@ else
 	echo "本地版本文件不存在，无法进行版本比较！"
 fi
 
+clear
 echo -e "${INFO} 正在获取最新版本信息..."
 log "更新源信息:$RESPONSE"
 log "更新地址: $REMOTE_URL"
