@@ -46,7 +46,7 @@ open_kali_os_list() {
 	sleep 0.1
 	echo -e "\n\e[90m📌 \e[1m【选择Kali系统版本】\e[0m"
 	sleep 0.1
-	echo -e "\e[95m1. 🟣 Kali\e[0m"
+	echo -e "\e[95m1. 🟣 Current\e[0m"
 	sleep 0.1
 	echo -e "\e[91m0. 🔴 退出\e[0m"
 	sleep 0.1
@@ -73,8 +73,6 @@ open_ubuntu_os_list() {
 	sleep 0.1
 	echo -e "\e[94m3. 🔵 Plucky（25.04 LTS）\e[0m"
 	sleep 0.1
-	echo -e "\e[94m4. ⚪️ Questing（25.10）\e[0m"
-	sleep 0.1
 	echo -e "\e[91m0. 🔴 退出\e[0m"
 	sleep 0.1
 	read -p "请输入对应数字选择：" ubuntu_os_list
@@ -94,11 +92,6 @@ open_ubuntu_os_list() {
 		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
 		Download_proot_url=${Proot_os_download_source}/ubuntu/plucky/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		;;
-	4)
-		os_name=Questing_Ubuntu_25.10
-		Download_proot_NAME=$(curl -s "${Proot_os_download_source}/ubuntu/questing/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
-		Download_proot_url=${Proot_os_download_source}/ubuntu/questing/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
-		;;		
 	*)
 		exit 1
 		;;
