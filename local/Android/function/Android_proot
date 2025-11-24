@@ -59,9 +59,9 @@ open_kali_os_list() {
 		Download_proot_url=${Proot_os_download_source}/kali/current/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
 		download_file="${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz"
 		mkdir -p "${HOME}/SakiSP-NEXT/download"
-		echo -e "\e[94m ℹ️  正在下载Kali系统镜像... \e[0m"
+		echo -e "\e[94m 正在下载Kali系统镜像... \e[0m"
 		if curl -L -C - -# -o "${download_file}" "${Download_proot_url}"; then
-			echo -e "\e[92m ✅ Kali系统镜像下载成功，存储路径：${download_file} \e[0m"
+			echo -e "\e[92m Kali系统镜像下载成功，存储路径：${download_file} \e[0m"
 		else
 			echo -e "\e[91m ❌ Kali系统镜像下载失败，尝试备用链接... \e[0m"
 			Download_proot_url="https://dl.gancmcs.top/${Download_proot_url}"
@@ -149,6 +149,7 @@ open_rockylinux_os_list() {
 		;;
 	esac
 }
+
 open_centos_os_list() {
 	clear
 	sleep 0.1
@@ -177,6 +178,44 @@ open_centos_os_list() {
 		;;
 	esac
 }
+
+open_archlinux_os_list() {
+	clear
+	sleep 0.1
+	echo -e "\n\e[90m📌 \e[1m【选择Arch Linux系统版本（安装可能会失败，未找到问题点且会显示乱码，最后一步的时候建议选择TOOL且选zh-cn】\e[0m"
+	sleep 0.1
+	echo -e "\e[95m1.🟣 Arch\e[0m"
+	sleep 0.1
+	echo -e "\e[91m0.🔴 退出\e[0m"
+	sleep 0.1
+	read -p "请输入对应数字选择：" archlinux_os_list
+	case ${archlinux_os_list} in
+    1)
+		os_name=archlinux
+		Download_proot_NAME=$(curl -s --connect-timeout 10 --max-time 20 "${Proot_os_download_source}/archlinux/current/${archurl}/default/" | grep -oP '<a href="[^"]*">\K[^<]*' | sed -n '2s|/$||p')
+		Download_proot_url=${Proot_os_download_source}/archlinux/current/${archurl}/default/${Download_proot_NAME}/rootfs.tar.xz
+		download_file="${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz"
+		mkdir -p "${HOME}/SakiSP-NEXT/download"
+		echo -e "\e[94m正在下载Arch系统镜像... \e[0m"
+		if curl -L -C - -# -o "${download_file}" --connect-timeout 10 --max-time 300 "${Download_proot_url}"; then
+			echo -e "\e[92m✅ Arch系统镜像下载成功，存储路径：${download_file} \e[0m"
+		else
+			echo -e "\e[91m❌ Arch系统镜像下载失败，尝试备用链接... \e[0m"
+			Download_proot_url="https://dl.gancmcs.top/${Download_proot_url}"
+			if curl -L -C - -# -o "${download_file}" --connect-timeout 10 --max-time 300 "${Download_proot_url}"; then
+				echo -e "\e[92m✅ 备用链接下载成功，存储路径：${download_file} \e[0m"
+			else
+				echo -e "\e[91m❌ 备用链接下载也失败，请检查网络！ \e[0m"
+				exit 1
+			fi
+		fi
+		;;
+	*)
+		exit 1
+		;;
+	esac
+}
+
 install_proot() {
 	case "$(uname -m)" in
 	aarch64)
@@ -202,6 +241,7 @@ install_proot() {
 	echo -e "\e[95m3. 🥑 Kali\e[0m"
 	echo -e "\e[96m4. 🍐 Rockylinux\e[0m"
 	echo -e "\e[92m5. 🥝 CentOS\e[0m"
+	echo -e "\e[38;5;166m6. 🍇 Arch Linux（安装过程可能极其不稳定）\e[0m"
 	echo -e "\e[91m0. 🌚 退出\e[0m"
 	read -p "请输入对应数字选择：" open_proot_os_list
 	case ${open_proot_os_list} in
@@ -225,6 +265,10 @@ install_proot() {
 		open_centos_os_list
 		log "安装centos系列"
 		;;
+	6)
+		open_archlinux_os_list
+		log "安装arch系列"
+		;;		
 	*)
 		log "未选择退出"
 		clear
@@ -239,18 +283,18 @@ install_proot() {
 			log "最大循环Maximum_number_of_attempts: $Maximum_number_of_attempts"
 			log "当前循环counter= $counter"
 			if wget -q --show-progress "${Download_proot_url}" -O "$download_file"; then
-				echo -e "\e[92m ✅ 成功：文件存储在 ${download_file} \e[0m"
+				echo -e "\e[92m✅ 成功：文件存储在 ${download_file} \e[0m"
 				log "下载成功：$download_file"
 				break
 			else
-				echo -e "\e[93m ⚠️  警告：请检查您的网络环境 \e[0m"
+				echo -e "\e[93m⚠️  警告：请检查您的网络环境 \e[0m"
 				log "下载失败：$download_file"
 				if [ $counter -eq 0 ]; then
 					Download_proot_url="https://dl.gancmcs.top/${Download_proot_url}"
 					log "尝试使用备用 URL 下载，更新 Download_proot_url 为 \"$Download_proot_url\""
 				fi
 				if [ $counter -eq $((Maximum_number_of_attempts - 1)) ]; then
-					echo -e "\e[91m ❌ 错误：多次下载失败，退出程序 \e[0m"
+					echo -e "\e[91m❌ 错误：多次下载失败，退出程序 \e[0m"
 					exit 1
 				fi
 			fi
@@ -259,7 +303,7 @@ install_proot() {
 	}
 	download_file="${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz"
 	if [ -f "$download_file" ] && [ $(du -b "$download_file" | cut -f1) -lt 41943040 ]; then
-		echo -e "\e[93m ⚠️  警告：${download_file} 可能已经损坏 \e[0m"
+		echo -e "\e[93m⚠️  警告：${download_file} 可能已经损坏 \e[0m"
 		log "\"${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz\"文件损坏，重新下载"
 		log "下载url:\"${Download_proot_url}\" 保存到 \"$download_file\""
 		counter=0
@@ -281,7 +325,7 @@ install_proot() {
 	proot --link2symlink tar --overwrite -xJf ${HOME}/SakiSP-NEXT/download/${os_name}.tar.xz -C ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/ --exclude='dev' || :
 	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/"
 	chmod 777 "${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/"
-	echo -e "\e[92m进度：复制脚本到容器 \e[0m"
+	echo -e "${GREEN}复制脚本到容器${RES}"
 	log "复制脚本到容器"
 	mkdir -p ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	mkdir -p ${HOME}/.termux/SakiSP-NEXT/.重要文件夹/sys/.empty
@@ -291,7 +335,6 @@ install_proot() {
 	cp -r ${HOME}/SakiSP-NEXT/local ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	cp ${HOME}/SakiSP-NEXT/sakispnext.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
 	cp ${HOME}/SakiSP-NEXT/git_push.sh ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/SakiSP-NEXT
-	echo -e "\e[92m进度：复制优化脚本到容器 \e[0m"
 	cp ${HOME}/SakiSP-NEXT/function/proot_proc/.* ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/proc/
 	cp ${HOME}/SakiSP-NEXT/function/proot_optimization ${HOME}/.termux/SakiSP-NEXT/proot/${os_name}/root/优化.sh
 	proot \
@@ -428,7 +471,7 @@ rm_proot() {
 	list_dir ${HOME}/.termux/SakiSP-NEXT/proot
 	case $user_choice in
 	0)
-		echo -e "${RED}QUIT${RES}"
+		echo -e "${RED}Quit${RES}"
 		log "退出"
 		;;
 	*)

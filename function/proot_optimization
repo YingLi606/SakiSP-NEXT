@@ -8,11 +8,9 @@ ERROR="[${RED}错误${RES}]:"
 WORRY="[${YELLOW}警告${RES}]:"
 SUSSEC="[${GREEN}成功${RES}]:"
 INFO="[${BLUE}信息${RES}]:"
-
 Modify_the_variable() {
     sed -i "s/^${1}=.*/${1}=${2}/" ${3}
 }
-
 get_linux_distro() {
     if [ -f /etc/os-release ]; then
         . /etc/os-release
@@ -24,7 +22,6 @@ get_linux_distro() {
         echo "unknown"
     fi
 }
-
 detect_package_manager() {
     local distro=$(get_linux_distro)
     case "$distro" in
@@ -64,21 +61,17 @@ detect_package_manager() {
             ;;
     esac
 }
-
 package_manager=$(detect_package_manager)
-
 self_install() {
     if ! command -v "$1" &>/dev/null; then
         echo -e "${RED}未安装 $1，正在安装...${RES}"
         $package_manager install -y "$1"
     fi
 }
-
 hcjx() {
     echo -e "${GREEN}按回车键继续...${RES}"
     read -r
 }
-
 echo -e "${INFO}正在优化系统，请勿退出！${RES}"
 echo "127.0.0.1 localhost" >/etc/hosts
 mkdir -p /run/systemd/resolve
@@ -101,9 +94,8 @@ $package_manager update -y &
 $package_manager upgrade -y
 Modify_the_variable last_time_aptup $(date +%s) ${HOME}/SakiSP-NEXT/config/config.sh
 current_distro=$(get_linux_distro)
-supported_distros=("ubuntu" "debian" "kali" "gxde")
+supported_distros=("ubuntu" "debian" "kali")
 whiptail_available=0
-
 if [[ " ${supported_distros[@]} " =~ " ${current_distro} " ]]; then
     if command -v whiptail >/dev/null 2>&1; then
         whiptail_available=1
@@ -113,15 +105,14 @@ if [[ " ${supported_distros[@]} " =~ " ${current_distro} " ]]; then
         if command -v whiptail >/dev/null 2>&1; then
             whiptail_available=1
         else
-            echo -e "${WORRY}目标系统${current_distro}，whiptail安装失败，将跳过MikuOne安装询问${RES}"
+            echo -e "${WORRY}目标系统${current_distro}，whiptail安装失败，将跳过SakiSP安装询问${RES}"
             whiptail_available=0
         fi
     fi
 else
-    echo -e "${INFO}你的系统 ${current_distro} 暂不支持SakiSP安装，跳过whiptail检测与相关流程${RES}"
+    echo -e "${INFO}你的系统 ${current_distro} 暂不支持SakiSP安装，跳过whiptail检测与SakiSP安装${RES}"
     whiptail_available=0
 fi
-
 self_install language-pack-zh-hans
 self_install fonts-wqy-microhei
 self_install fonts-wqy-zenhei
@@ -133,50 +124,71 @@ self_install git
 self_install jq
 self_install curl
 self_install bc
-
-echo -e "${GREEN}请自行手动配置语言${RESET}"
-hcjx
-dpkg-reconfigure locales
-echo -e "${INFO} 手动语言配置完成，2秒后继续...${RESET}"
+echo -e "${INFO}准备检测系统发行版"
 sleep 2
-clear
-
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    case $ID in
+        ubuntu|debian|kali)
+            echo -e "${SUSSEC} 检测到支持的系统：$PRETTY_NAME，请自行配置语言${RES}"
+            hcjx
+            dpkg-reconfigure locales
+            echo -e "${SUSSEC} 手动语言配置完成，2秒后继续...${RES}"
+            sleep 2
+            clear
+            ;;
+        *)
+            echo -e "${ERROR} 检测到不支持的系统：$PRETTY_NAME，跳过语言配置步骤${RES}"
+            sleep 2
+            clear
+            ;;
+    esac
+else
+    echo -e "${ERROR} 无法检测系统发行版，跳过语言配置步骤${RES}"
+    sleep 2
+    clear
+fi
 if [ $whiptail_available -eq 1 ]; then
     whiptail --title "安装SakiSP" --yesno "是否需要安装SakiSP？该工具可用于很大用途" 10 60
     if [ $? -eq 0 ]; then
-        echo -e "${INFO} 用户选择安装SakiSP，正在克隆仓库...${RESET}"
-        git clone https://gh.xmly.dev/https://github.com/YingLi606/SakiSP.git
-        
+        echo -e "${INFO} 用户选择安装SakiSP，正在克隆仓库...${RES}"
+        git clone https://gh.xmly.dev/https://github.com.xingLi606/SakiSP.git
         sleep 2
         clear
-        echo -e "${SUSSEC} SakiSP已完成安装步骤，即将进入下一步...${RESET}"
+        echo -e "${SUSSEC} SakiSP已完成安装步骤，即将进入下一步...${RES}"
         sleep 2
     else
         clear
-        echo -e "${INFO} 用户选择无需安装SakiSP，该步骤跳过${RESET}"
-    fi
-    sleep 3
-    echo -e "${INFO}现在，请选择你需要更换的国内软件源（进入过程可能需要一段时间，请耐心等待）${RESET}"
-    sleep 3
-    sudo bash -c "bash <(curl -sSL https://linuxmirrors.cn/main.sh)" && echo -e "${GREEN}✅ 执行完成，正在进入下一步...${RESET}"
-    sleep 2
-    clear
-    
-    whiptail --title "安装TMOE TOOL" --yesno "是否需要安装TMOE TOOL？该工具可用于很大用途" 10 60
-    if [ $? -eq 0 ]; then
-        echo -e "${INFO} 用户选择安装TMOE TOOL，正在准备开始...（可以选择第一个即可）${RESET}"
-        sleep 2
-        sudo bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
-        
-        sleep 2
-        clear
-        echo -e "${SUSSEC} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RESET}"
-        sleep 3
-    else
-        clear
-        echo -e "${INFO} 用户选择无需安装TMOE TOOL，该步骤跳过，请重新启动脚本且启动容器${RESET}"
-        sleep 3
+        echo -e "${INFO} 用户选择无需安装SakiSP，该步骤跳过${RES}"
     fi
 fi
-
+echo -e "${INFO}现在，请选择你需要更换的国内软件源（全Linux系统支持，进入过程可能需要一段时间，请耐心等待）${RES}"
+sleep 3
+sudo bash -c "bash <(curl -sSL https://linuxmirrors.cn/main.sh)" && echo -e "${GREEN}✅ 软件源切换执行完成，正在进入下一步...${RES}"
+sleep 2
+clear
+if [ $whiptail_available -eq 1 ]; then
+    whiptail --title "安装TMOE TOOL" --yesno "是否需要安装TMOE TOOL？" 10 60
+    if [ $? -eq 0 ]; then
+        echo -e "${INFO} 用户选择安装TMOE TOOL，正在准备开始...（建议都输入Y,国内选择Gitee）${RES}"
+        sleep 2
+        sudo bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
+        sleep 2
+        clear
+        echo -e "${SUSSEC} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RES}"
+        sleep 3
+    else
+        clear
+        echo -e "${INFO} 用户选择无需安装TMOE TOOL，该步骤跳过，请重新启动脚本且启动容器${RES}"
+        sleep 3
+    fi
+else
+    echo -e "${INFO}开始安装TMOE TOOL...（建议都输入Y,国内选择Gitee）${RES}"
+    sleep 2
+    sudo bash -c "$(curl -L https://gitee.com/mo2/linux/raw/2/2)"
+    sleep 2
+    clear
+    echo -e "${SUSSEC} TMOE TOOL已完成安装步骤！请重新启动脚本且启动容器${RES}"
+    sleep 3
+fi
 exit
