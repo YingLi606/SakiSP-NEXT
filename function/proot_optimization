@@ -179,11 +179,11 @@ echo -e "───────────────────────�
 echo -e "  📦  TMOE TOOL 安装向导  📦              "
 echo -e "─────────────────────────────────────────"
 echo -e "  ✅  建议国内用户选择 Gitee 源           "
-echo -e "${WARN}  ✅  安装过程中建议全程输入 Y 确认       ${RES}"
+echo -e "  ✅  安装过程中建议全程输入 Y 确认       "
 echo -e "─────────────────────────────────────────"
 
-echo -e "\n${SUSSEC}❓ 是否需要安装 TMOE TOOL？${RES}"
-echo -e "${INFO}📌 请输入：${SUSSEC}y${RES}（安装） / ${WARN}n${RES}（跳过）"
+echo -e "\n❓ 是否需要安装 TMOE TOOL？${RES}"
+echo -e "${📌 请输入：${SUSSEC}y${RES}（安装） / ${WARN}n${RES}（跳过）"
 read -r user_choice
 
 if [[ "$user_choice" =~ ^[Yy]$ ]]; then
@@ -193,15 +193,15 @@ if [[ "$user_choice" =~ ^[Yy]$ ]]; then
     sleep 2
     clear
     echo -e "─────────────────────────────────────────"
-    echo -e "${SUSSEC}  ✅  TMOE TOOL 安装完成！                ${RES}"
-    echo -e "${INFO}  📢  请重新启动脚本并启动容器           ${RES}"
+    echo -e "  ✅  TMOE TOOL 安装完成！                ${RES}"
+    echo -e "  📢  请重新启动脚本并启动容器           ${RES}"
     echo -e "─────────────────────────────────────────"
     sleep 3
 else
     clear
     echo -e "─────────────────────────────────────────"
-    echo -e "${WARN}  ⏭️  用户选择跳过 TMOE TOOL 安装         ${RES}"
-    echo -e "${INFO}  📢  请重新启动脚本并启动容器           ${RES}"
+    echo -e "  ⏭️  用户选择跳过 TMOE TOOL 安装         ${RES}"
+    echo -e "  📢  请重新启动脚本并启动容器           ${RES}"
     echo -e "─────────────────────────────────────────"
     sleep 3
 fi
