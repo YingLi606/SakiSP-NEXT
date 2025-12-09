@@ -1,5 +1,5 @@
 {
-    "version": "9.1.5",
+    "version": "9.1.8",
     "git_clone": "YingLi606/SakiSP-NEXT",
-    "description": "1.优化稳定性 2.修复已知问题"
+    "description": "1.修复Napcat机器无法启动问题"
 }
