@@ -1,5 +1,5 @@
 {
-    "version": "9.2.0",
+    "version": "11.0.0",
     "git_clone": "YingLi606/SakiSP-NEXT",
-    "description": "1.优化Napcat安装页面 2.修复无法读取WebUI文件问题"
+    "description": "1.Android与Linux版新增网速测试"
 }

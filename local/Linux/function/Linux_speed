@@ -1,0 +1,111 @@
+#!/data/data/com.termux/files/usr/bin/bash
+Android_speed() {
+    clear
+    echo -e "\033[1;34m════════════════════════════════════════════\033[0m"
+    echo -e "\033[1;36m      ${system} 网络测速工具 v3.2.0          \033[0m"
+    echo -e "\033[1;34m════════════════════════════════════════════\033[0m"
+
+    if ! command -v aria2c &> /dev/null; then
+        echo -e "\033[1;33m⚠️  检测到未安装 aria2c，将自动尝试安装\033[0m"
+        if command -v apt &> /dev/null; then
+            apt update > /dev/null 2>&1 && apt install -y aria2 > /dev/null 2>&1
+        elif command -v pacman &> /dev/null; then
+            pacman -Sy --noconfirm aria2 > /dev/null 2>&1
+        elif command -v dnf &> /dev/null; then
+            dnf install -y aria2 > /dev/null 2>&1
+        elif command -v yum &> /dev/null; then
+            yum install -y aria2 > /dev/null 2>&1
+        elif command -v pkg &> /dev/null; then
+            pkg update > /dev/null 2>&1 && pkg install -y aria2 > /dev/null 2>&1
+        else
+            echo -e "\033[1;31m❌  不支持的包管理器，无法安装 aria2c，退出测速\033[0m"
+            sleep 3
+            clear
+            return 1
+        fi
+        if ! command -v aria2c &> /dev/null; then
+            echo -e "\033[1;31m❌  aria2c 安装失败，退出测速\033[0m"
+            sleep 3
+            clear
+            return 1
+        fi
+        echo -e "\033[1;32m✅  aria2c 安装成功\033[0m"
+        sleep 1
+        cleat
+    fi
+
+    mkdir -p "${HOME}/SakiSP-NEXT/download" 2>/dev/null
+
+    for i in {20..1}; do
+        echo -en "\033[1;33m📊 测速即将开始，预估消耗流量 50-200MB (剩余: ${i}s) [Y/n]: \033[0m"
+        if read -t 1 -n 1 -r confirm; then
+            case $confirm in
+                [Yy])
+                    echo -e "\n\033[1;32m▶️  确认测速，流程启动！\033[0m\n"
+                    sleep 1
+                    clear
+                    break
+                    ;;
+                [Nn])
+                    echo -e "\n\033[1;35m⏹️  操作已终止\033[0m"
+                    sleep 2
+                    clear
+                    return 1
+                    ;;
+                *)
+                    echo -e "\n\033[1;31m⚠️  输入错误，请重新选择！\033[0m"
+                    sleep 1
+                    clear
+                    ;;
+            esac
+        fi
+        echo -ne "\r\033[K"
+    done
+
+    declare -A mirrors=(
+        ["南京大学镜像站"]="https://mirrors.nju.edu.cn/debian/ls-lR.gz"
+        ["山东大学镜像站"]="https://mirrors.sdu.edu.cn/debian/ls-lR.gz"
+        ["上海交大镜像站"]="https://ftp.sjtu.edu.cn/debian/ls-lR.gz"
+        ["中科大镜像站"]="https://mirrors.ustc.edu.cn/debian/ls-lR.gz"
+        ["华为云镜像站"]="https://mirrors.huaweicloud.com/debian/ls-lR.gz"
+        ["北外镜像站"]="https://mirrors.bfsu.edu.cn/debian/ls-lR.gz"
+        ["清华镜像站"]="https://mirrors.tuna.tsinghua.edu.cn/debian/ls-lR.gz"
+    )
+
+    for name in "${!mirrors[@]}"; do
+        timestamp=$(date +%s%3N)
+        tmp_file="${HOME}/SakiSP-NEXT/download/ls-lR_${timestamp}.gz"
+
+        echo -e "\n\033[1;34m📡 正在检测镜像节点: \033[1;36m${name}\033[0m"
+
+        aria2c --console-log-level=notice \
+               --summary-interval=50 \
+               --show-console-readout=true \
+               --download-result=default \
+               --timeout=20 \
+               -d "${HOME}/SakiSP-NEXT/download" \
+               -o "ls-lR_${timestamp}.gz" \
+               "${mirrors[$name]}"
+
+        if [ $? -eq 0 ]; then
+            rm -rf "${tmp_file}" 2>/dev/null
+            echo -e "\033[1;32m✅  ${name} 检测完成！\033[0m"
+            sleep 1
+            clear
+        else
+            echo -e "\033[1;31m❌  ${name} 检测失败！\033[0m"
+            sleep 1
+            clear
+        fi
+    done
+
+    rm -rf "${HOME}/SakiSP-NEXT/download"/* 2>/dev/null
+
+    echo -e "\n\033[1;34m════════════════════ 温馨提示 ════════════════\033[0m"
+    echo -e "\033[1;36m💡 测速结果仅代表下载速度，不反映镜像同步频率\033[0m"
+    echo -e "\033[1;33m✨ 推荐访问镜像站官网查看同步策略详情\033[0m"
+    echo -e "\033[1;34m════════════════════════════════════════════\033[0m\n"
+
+    read -p "🔙 按回车键退出..."
+    clear
+}

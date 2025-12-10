@@ -158,12 +158,18 @@ if [ -f /etc/os-release ] && [ "$current_distro" != "archarm" ] && [ "$current_d
             echo -e "${SUSSEC} 检测到支持的系统：$PRETTY_NAME，请自行配置语言${RES}"
             hcjx
             dpkg-reconfigure locales
-            echo -e "${SUSSEC} 手动语言配置完成，2秒后继续...${RES}"
+            echo -e "${SUSSEC} 语言配置完成，2秒后继续...${RES}"
+            sleep 2
+            clear
+            echo -e "${INFO} 接下来请自行配置时区 ${RES}"
+            hcjx
+            dpkg-reconfigure tzdata
+            echo -e "${SUSSEC} 时区配置完成，2秒后继续...${RES}"
             sleep 2
             clear
             ;;
         *)
-            echo -e "${ERROR} 检测到不支持的系统：$PRETTY_NAME，跳过语言配置步骤${RES}"
+            echo -e "${ERROR} 检测到不支持的系统：$PRETTY_NAME，跳过语言配置及时区步骤${RES}"
             sleep 2
             clear
             ;;
@@ -181,7 +187,7 @@ if [ $whiptail_available -eq 1 ]; then
         echo -e "${INFO} 用户选择安装SakiSP，正在克隆仓库...${RES}"
         git clone https://gh.xmly.dev/https://github.com/YingLi606/SakiSP.git 2>/dev/null
         sleep 2
-        echo -e "${SUSSEC} SakiSP已完成安装步骤，即将进入下一步...${RES}"
+        echo -e "${SUSSEC} SakiSP已完成安装步骤，如需使用请输入bash ~/SakiSP/sakisp.sh，即将进入下一步...${RES}"
         sleep 2
     else
         echo -e "${INFO} 用户选择无需安装SakiSP，该步骤跳过${RES}"
